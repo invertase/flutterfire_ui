@@ -1,12 +1,29 @@
 part of firebase_auth_ui;
 
+/// Used to set the type of verification request on [VerifyPhoneNumberOptions].
 enum VerifyPhoneNumberType {
+  /// Once verified, the user signed in.
+  ///
+  /// The user must be logged out otherwise an error will be thrown.
   signIn,
+
+  /// Once verified, the phone number is linked to the currently signed in user.
+  ///
+  /// The user must be signed in otherwise an error will be thrown.
   link,
 }
 
+/// Custom error callback handler.
 typedef String VerifyPhoneNumberError(Object exception);
 
+/// Options which can be passed to the [verifyPhoneNumber] method to control
+/// the sign-in flow.
+///
+/// ```dart
+/// verifyPhoneNumber(context, VerifyPhoneNumberOptions(
+///   title: 'Phone number verification',
+/// ));
+/// ```
 class VerifyPhoneNumberOptions {
   const VerifyPhoneNumberOptions(
       {this.auth,
@@ -16,25 +33,49 @@ class VerifyPhoneNumberOptions {
       this.description =
           "Enter your phone number below. Once validated, a SMS code will be sent to your device. Enter the code in the box below to verify your phone number and sign-in to the application.",
       this.phoneNumberLabel = "Enter your phone number (+44)",
-      this.smsCodeLabel = "Enter SMS code",
       this.send = "Send SMS Code",
       this.cancel = "Cancel"});
 
+  /// The [FirebaseAuth] instance to authentication with.
+  /// 
+  /// The default [FirebaseAuth] instance will be used if not provided.
   final FirebaseAuth auth;
+
+  /// The type of authentication to carry out once verified.
   final VerifyPhoneNumberType type;
+
+  /// A custom error handler function.
+  /// 
+  /// By default, errors will be strigified and displayed to users. Use this
+  /// argument to return your own custom error messages.
   final VerifyPhoneNumberError onError;
+
+  /// The title of the dialog.
+  /// 
+  /// Defaults to "Verify your phone number".
   final String title;
+
+
+  /// The description shown below the [title].
   final String description;
+
+  /// The label shown for the phone number text field.
   final String phoneNumberLabel;
-  final String smsCodeLabel;
+
+  /// The text used for the send button.
   final String send;
+
+  /// The text used for the cancel button.
   final String cancel;
 }
 
-Future<UserCredential> verifyPhoneNumber(
-  BuildContext context, {
-  VerifyPhoneNumberOptions options = const VerifyPhoneNumberOptions(),
-}) {
+/// The entry point for triggering the phone number verification UI.
+/// 
+/// Resolves with the result of the flow. If the user successfully verifies the
+/// phone number, they will be signed in and the [UserCredential] will be returned.
+/// Otherwise, `null` will be returned (e.g. if they cancel the flow).
+Future<UserCredential> verifyPhoneNumber(BuildContext context,
+    [VerifyPhoneNumberOptions options = const VerifyPhoneNumberOptions()]) {
   assert(context != null);
 
   return showDialog<UserCredential>(
