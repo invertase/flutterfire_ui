@@ -1,0 +1,15 @@
+name: firebase_auth_ui
+description: A new Flutter package project.
+version: 0.0.1
+author:
+homepage: http://github.com/invertase/flutterfire_ui
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  firebase_auth: any
