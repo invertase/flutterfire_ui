@@ -37,7 +37,7 @@ class VerifyPhoneNumberOptions {
       this.cancel = "Cancel"});
 
   /// The [FirebaseAuth] instance to authentication with.
-  /// 
+  ///
   /// The default [FirebaseAuth] instance will be used if not provided.
   final FirebaseAuth auth;
 
@@ -45,16 +45,15 @@ class VerifyPhoneNumberOptions {
   final VerifyPhoneNumberType type;
 
   /// A custom error handler function.
-  /// 
+  ///
   /// By default, errors will be strigified and displayed to users. Use this
   /// argument to return your own custom error messages.
   final VerifyPhoneNumberError onError;
 
   /// The title of the dialog.
-  /// 
+  ///
   /// Defaults to "Verify your phone number".
   final String title;
-
 
   /// The description shown below the [title].
   final String description;
@@ -70,7 +69,7 @@ class VerifyPhoneNumberOptions {
 }
 
 /// The entry point for triggering the phone number verification UI.
-/// 
+///
 /// Resolves with the result of the flow. If the user successfully verifies the
 /// phone number, they will be signed in and the [UserCredential] will be returned.
 /// Otherwise, `null` will be returned (e.g. if they cancel the flow).
@@ -304,11 +303,25 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
                   description,
                   if (!_enterSmsCode) input,
                   if (_enterSmsCode) _SMSCodeInput(onCodeEntered),
-                  if (_error != null) error,
+                  if (_error != null) _Error(_error),
                   footer,
                 ],
               )),
         ));
+  }
+}
+
+class _Error extends StatelessWidget {
+  const _Error(this.text);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(top: 12),
+      child: Text(text, style: TextStyle(color: Colors.red)),
+    );
   }
 }
 
