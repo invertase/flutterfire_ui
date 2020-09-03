@@ -44,7 +44,7 @@ class VerifyPhoneNumberOptions {
       this.errorColor = Colors.red,
       this.buttonColor = Colors.black,
       this.inputHighlightColor = Colors.blueAccent,
-      this.borderRadius = 3,
+      this.borderRadius = 5,
       this.favoriteCountries = const ['US'],
       this.defaultCountry = 'US'
       });
@@ -280,18 +280,15 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
           if(_enterSmsCode)
             FlatButton(
               onPressed: () => triggerVerification(),
-              padding: EdgeInsets.all(16),
               child: Text("Resend Code", style: TextStyle(fontSize: 16, color: widget.options.buttonColor),),
             ),
           FlatButton(
             onPressed: () => Navigator.pop(context, null),
-            padding: EdgeInsets.all(16),
             child: Text("Cancel", style: TextStyle(fontSize: 16, color: widget.options.buttonColor)),
           ),
           if (!_enterSmsCode)
             FlatButton(
               onPressed: () => triggerVerification(),
-              padding: EdgeInsets.all(16),
               child: Text(
                 widget.options.send,
                 style: TextStyle(
@@ -412,7 +409,7 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
           ),
           width: 500,
           child: Padding(
-              padding: EdgeInsets.all(24.0),
+              padding: EdgeInsets.all(16.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
