@@ -36,9 +36,14 @@ class VerifyPhoneNumberOptions {
       this.send = "Send SMS Code",
       this.cancel = "Cancel",
       this.backgroundColor = Colors.white,
+      this.titleColor = Colors.black,
+      this.textColor = Colors.grey,
+        this.errorColor = Colors.red,
+      this.buttonColor = Colors.black,
+        this.inputHighlightColor = Colors.blueAccent,
       this.borderRadius = 3,
       this.favoriteCountries = const ['US'],
-        this.defaultCountry = 'US'
+      this.defaultCountry = 'US'
       });
 
   /// The [FirebaseAuth] instance to authentication with.
@@ -74,6 +79,21 @@ class VerifyPhoneNumberOptions {
 
   /// The background color of the popup
   final Color backgroundColor;
+
+  /// The color of the title text
+  final Color titleColor;
+
+  /// The color of the description text
+  final Color textColor;
+
+  /// The color of the description text
+  final Color buttonColor;
+
+  /// The highlight color of the input box
+  final Color inputHighlightColor;
+
+  /// The color of an error message
+  final Color errorColor;
 
   /// The borderRadius of the popup
   final double borderRadius;
@@ -169,19 +189,19 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
         margin: EdgeInsets.only(bottom: 24),
         child: Text(
           widget.options.title,
-          style: TextStyle(fontSize: 24),
+          style: TextStyle(fontSize: 24, color: widget.options.titleColor),
         ));
   }
 
   Widget get description {
     return Text(widget.options.description,
-        style: TextStyle(fontSize: 14, color: Colors.grey));
+        style: TextStyle(fontSize: 14, color: widget.options.textColor));
   }
 
   Widget get error {
     return Container(
       margin: EdgeInsets.only(top: 12),
-      child: Text(_error, style: TextStyle(color: Colors.red)),
+      child: Text(_error, style: TextStyle(color: widget.options.errorColor)),
     );
   }
 
@@ -195,10 +215,20 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
               onChanged: (code) => updateCountryCode(code.toString()),
               initialSelection: widget.options.defaultCountry,
               favorite: widget.options.favoriteCountries,
+              textStyle: TextStyle(color: widget.options.textColor),
             ),
             Expanded(child: TextField(
               onChanged: (value) => parsePhoneNumber(value),
+              style: TextStyle(color: widget.options.textColor),
+              cursorColor: widget.options.inputHighlightColor,
               decoration: InputDecoration(
+                labelStyle: TextStyle(color: widget.options.inputHighlightColor),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: widget.options.inputHighlightColor),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: widget.options.inputHighlightColor),
+                  ),
                   labelText: widget.options.phoneNumberLabel,
                   suffix: _verifying
                       ? SizedBox(
@@ -224,12 +254,12 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
             FlatButton(
               onPressed: () => triggerVerification(),
               padding: EdgeInsets.all(16),
-              child: Text("Resend Code", style: TextStyle(fontSize: 16)),
+              child: Text("Resend Code", style: TextStyle(fontSize: 16, color: widget.options.buttonColor),),
             ),
           FlatButton(
             onPressed: () => Navigator.pop(context, null),
             padding: EdgeInsets.all(16),
-            child: Text("Cancel", style: TextStyle(fontSize: 16)),
+            child: Text("Cancel", style: TextStyle(fontSize: 16, color: widget.options.buttonColor)),
           ),
           if (!_enterSmsCode)
             FlatButton(
@@ -239,6 +269,7 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
                 widget.options.send,
                 style: TextStyle(
                   fontSize: 16,
+                    color: widget.options.buttonColor
                 ),
               ),
             ),
