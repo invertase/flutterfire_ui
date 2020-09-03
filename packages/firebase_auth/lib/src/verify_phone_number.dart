@@ -37,7 +37,8 @@ class VerifyPhoneNumberOptions {
       this.cancel = "Cancel",
       this.backgroundColor = Colors.white,
       this.borderRadius = 3,
-      this.favoriteCountries = const ['US']
+      this.favoriteCountries = const ['US'],
+        this.defaultCountry = 'US'
       });
 
   /// The [FirebaseAuth] instance to authentication with.
@@ -77,7 +78,11 @@ class VerifyPhoneNumberOptions {
   /// The borderRadius of the popup
   final double borderRadius;
 
+  /// The favorite countries to be used in the Country Picker
   final List<String> favoriteCountries;
+
+  /// The default country code used in the Country Picker
+  final String defaultCountry;
 }
 
 /// The entry point for triggering the phone number verification UI.
@@ -140,9 +145,14 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
   }
 
   void parsePhoneNumber(String phoneNumber) {
-    print("$_countryCode$phoneNumber");
     setState(() {
       _phoneNumber = _countryCode + phoneNumber;
+    });
+  }
+
+  void updateCountryCode(String countryCode) {
+    setState(() {
+      _phoneNumber = countryCode + _phoneNumber;
     });
   }
 
@@ -179,8 +189,9 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
         child: Row(
           children: <Widget>[
             CountryCodePicker(
-              onChanged: (code) => _countryCode = code.toString(),
-              initialSelection: 'US',
+              onInit: (code) => _countryCode = code.toString(),
+              onChanged: (code) => updateCountryCode(code.toString()),
+              initialSelection: widget.options.defaultCountry,
               favorite: widget.options.favoriteCountries,
             ),
             Expanded(child: TextField(
@@ -207,6 +218,12 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          if(_enterSmsCode)
+            FlatButton(
+              onPressed: () => triggerVerification(),
+              padding: EdgeInsets.all(16),
+              child: Text("Resend Code", style: TextStyle(fontSize: 16)),
+            ),
           FlatButton(
             onPressed: () => Navigator.pop(context, null),
             padding: EdgeInsets.all(16),
@@ -255,10 +272,10 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
       if (e is FirebaseException) {
         switch (e.code) {
           case 'invalid-phone-number':
-            message = "Please check the format of the provided phone number";
+            message = "Please check the format of the provided phone number: $_phoneNumber";
             break;
           case 'phone-number-already-exists':
-            message = "This phone number is already in use";
+            message = "The number $_phoneNumber is already in use";
             break;
           default:
             message = e.message;
@@ -427,8 +444,13 @@ class _SMSCodeInput extends StatelessWidget {
 
     return Container(
       margin: EdgeInsets.only(top: 24),
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround, children: inputs),
+      child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: inputs,
+            ),
+          ]),
     );
   }
 }

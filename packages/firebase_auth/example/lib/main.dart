@@ -73,7 +73,8 @@ class _MyHomePageState extends State<MyHomePage> {
         body: Center(
           child: RaisedButton(
             onPressed: () => verifyPhoneNumber(context, VerifyPhoneNumberOptions(
-              favoriteCountries: ['GB']
+              favoriteCountries: ['GB', 'US'],
+                  defaultCountry: 'GB'
             )).then(print),
             child: Text("Verify Phone Number..."),
           ),
