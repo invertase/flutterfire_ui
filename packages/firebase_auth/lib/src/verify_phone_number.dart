@@ -133,9 +133,11 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
   String _error;
   String _phoneNumber;
   String _verificationId;
+  String _countryCode = '+1';
   bool _verifying = false;
   bool _enterSmsCode = false;
-  String _countryCode = '+1';
+  int _resendToken;
+
   TextEditingController codeInputController = TextEditingController();
 
   void setVerifying(bool value) {
@@ -302,6 +304,7 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
   }
 
   void codeSent(String verificationId, int resendToken) {
+    _resendToken = resendToken;
     _verificationId = verificationId;
     setEnterSmsCode(true);
   }
@@ -316,7 +319,7 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
     performAuthAction(credential);
   }
 
-  Future<void> triggerVerification() async {
+  Future<void> triggerVerification({ bool resendCode = false}) async {
     if (_verifying || (_phoneNumber == null || _phoneNumber.isEmpty)) {
       return;
     }
@@ -328,6 +331,7 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
           verificationCompleted: verificationCompleted,
           verificationFailed: handleError,
           codeSent: codeSent,
+          forceResendingToken: resendCode ? _resendToken : null,
           codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
     } catch (e) {
       handleError(e);
