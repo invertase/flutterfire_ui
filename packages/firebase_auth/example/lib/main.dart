@@ -75,12 +75,8 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed: () => verifyPhoneNumber(context, VerifyPhoneNumberOptions(
                 favoriteCountries: ['GB', 'US'],
                 defaultCountry: 'GB',
-                backgroundColor: Colors.indigo,
-                titleColor: Colors.white,
-                textColor: Colors.white,
-                errorColor: Colors.green,
-                inputHighlightColor: Colors.orangeAccent,
-                buttonColor: Colors.white54
+                title: "Create Account",
+                inputHighlightColor: Colors.black54
             )).then(print),
             child: Text("Verify Phone Number..."),
           ),

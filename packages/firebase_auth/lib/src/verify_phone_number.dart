@@ -29,9 +29,12 @@ class VerifyPhoneNumberOptions {
       {this.auth,
       this.type = VerifyPhoneNumberType.signIn,
       this.onError,
-      this.title = "Mobile Verification",
+      this.title = "Verify your phone number",
+      this.otpTitle = "Code Validation",
       this.description =
-          "Please enter your phone number to verify your account",
+          "Please enter your phone number \r\n"
+              "We will send you a one time passcode (OTP)",
+      this.otpDescription = "An OTP has been sent. Please enter it below",
       this.phoneNumberLabel = "Enter your phone number",
       this.send = "Send SMS Code",
       this.cancel = "Cancel",
@@ -65,8 +68,16 @@ class VerifyPhoneNumberOptions {
   /// Defaults to "Verify your phone number".
   final String title;
 
+  /// The title of the dialog on the OTP Screen.
+  ///
+  /// Defaults to "Code Validation".
+  final String otpTitle;
+
   /// The description shown below the [title].
   final String description;
+
+  /// The description shown below the [title] on the validation screen.
+  final String otpDescription;
 
   /// The label shown for the phone number text field.
   final String phoneNumberLabel;
@@ -187,15 +198,31 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
   Widget get title {
     return Container(
         margin: EdgeInsets.only(bottom: 24),
-        child: Text(
-          widget.options.title,
-          style: TextStyle(fontSize: 24, color: widget.options.titleColor),
-        ));
+        child: Center(
+          child: Text(
+            _enterSmsCode ? widget.options.otpTitle : widget.options.title,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 24,
+              color: widget.options.titleColor,
+              fontWeight: FontWeight.w500),
+          ),
+        ),
+    );
   }
 
   Widget get description {
-    return Text(widget.options.description,
-        style: TextStyle(fontSize: 14, color: widget.options.textColor));
+    return Center(
+        child: Text(
+            _enterSmsCode ? widget.options.otpDescription : widget.options.description,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontSize: 14,
+                color: widget.options.textColor,
+            height: 1.5
+            )
+        ),
+    );
   }
 
   Widget get error {
@@ -281,17 +308,20 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
   void performAuthAction(PhoneAuthCredential phoneAuthCredential) async {
     UserCredential userCredential;
 
-    if (widget.options.type == VerifyPhoneNumberType.signIn) {
-      assert(widget.auth.currentUser == null);
-      userCredential =
-          await widget.auth.signInWithCredential(phoneAuthCredential);
-    } else {
-      assert(widget.auth.currentUser != null);
-      userCredential =
-          await widget.auth.currentUser.linkWithCredential(phoneAuthCredential);
+    try {
+      if (widget.options.type == VerifyPhoneNumberType.signIn) {
+        assert(widget.auth.currentUser == null);
+        userCredential =
+        await widget.auth.signInWithCredential(phoneAuthCredential);
+      } else {
+        assert(widget.auth.currentUser != null);
+        userCredential =
+        await widget.auth.currentUser.linkWithCredential(phoneAuthCredential);
+      }
+      Navigator.pop(context, userCredential);
+    } catch (e) {
+      handleError(e);
     }
-
-    Navigator.pop(context, userCredential);
   }
 
   void handleError(Object e) {
@@ -464,14 +494,14 @@ class _SMSCodeInput extends StatelessWidget {
           ),
           decoration: InputDecoration(
             counterText: '',
-            focusedBorder: OutlineInputBorder(
+            focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: options.inputHighlightColor),
             ),
             contentPadding: EdgeInsets.only(
               bottom: 30,
             ),
             enabledBorder:
-                OutlineInputBorder(borderSide: BorderSide(color: options.textColor)),
+                UnderlineInputBorder(borderSide: BorderSide(color: options.textColor)),
           ),
         ),
       ),

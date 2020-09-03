@@ -8,3 +8,4 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/services.dart';
 
 part 'src/verify_phone_number.dart';
+/// part 'src/sign_in_with_provider.dart';

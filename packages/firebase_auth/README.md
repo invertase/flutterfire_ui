@@ -6,7 +6,7 @@ A dialog popup which handles the user verifying their phone number and signing i
 
 - [x] Setup basic working example
 - [ ] Break out common widgets into own directory
-- [ ] Implement "resend" flow
+- [x] Implement "resend" flow
 - [ ] Display errors better
 - [ ] Overall UI improvements (Google Pay has a good SMS validation UI)
 - [ ] Support Web (possible since sign-in is carried out).
