@@ -29,12 +29,16 @@ class VerifyPhoneNumberOptions {
       {this.auth,
       this.type = VerifyPhoneNumberType.signIn,
       this.onError,
-      this.title = "Verify your phone number",
+      this.title = "Mobile Verification",
       this.description =
-          "Enter your phone number below. Once validated, a SMS code will be sent to your device. Enter the code in the box below to verify your phone number and sign-in to the application.",
-      this.phoneNumberLabel = "Enter your phone number (+44)",
+          "Please enter your phone number to verify your account",
+      this.phoneNumberLabel = "Enter your phone number",
       this.send = "Send SMS Code",
-      this.cancel = "Cancel"});
+      this.cancel = "Cancel",
+      this.backgroundColor = Colors.white,
+      this.borderRadius = 3,
+      this.favoriteCountries = const ['US']
+      });
 
   /// The [FirebaseAuth] instance to authentication with.
   ///
@@ -46,7 +50,7 @@ class VerifyPhoneNumberOptions {
 
   /// A custom error handler function.
   ///
-  /// By default, errors will be strigified and displayed to users. Use this
+  /// By default, errors will be stringified and displayed to users. Use this
   /// argument to return your own custom error messages.
   final VerifyPhoneNumberError onError;
 
@@ -66,6 +70,14 @@ class VerifyPhoneNumberOptions {
 
   /// The text used for the cancel button.
   final String cancel;
+
+  /// The background color of the popup
+  final Color backgroundColor;
+
+  /// The borderRadius of the popup
+  final double borderRadius;
+
+  final List<String> favoriteCountries;
 }
 
 /// The entry point for triggering the phone number verification UI.
@@ -82,7 +94,7 @@ Future<UserCredential> verifyPhoneNumber(BuildContext context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(options.borderRadius)),
           insetPadding: EdgeInsets.all(16),
           child: _VerifyPhoneNumber(
             context: context,
@@ -118,11 +130,19 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
   String _verificationId;
   bool _verifying = false;
   bool _enterSmsCode = false;
+  String _countryCode = '+1';
   TextEditingController codeInputController = TextEditingController();
 
   void setVerifying(bool value) {
     setState(() {
       _verifying = value;
+    });
+  }
+
+  void parsePhoneNumber(String phoneNumber) {
+    print("$_countryCode$phoneNumber");
+    setState(() {
+      _phoneNumber = _countryCode + phoneNumber;
     });
   }
 
@@ -156,24 +176,27 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
   Widget get input {
     return Container(
         margin: EdgeInsets.only(top: 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextFormField(
-              onChanged: (value) => _phoneNumber = value,
+        child: Row(
+          children: <Widget>[
+            CountryCodePicker(
+              onChanged: (code) => _countryCode = code.toString(),
+              initialSelection: 'US',
+              favorite: widget.options.favoriteCountries,
+            ),
+            Expanded(child: TextField(
+              onChanged: (value) => parsePhoneNumber(value),
               decoration: InputDecoration(
                   labelText: widget.options.phoneNumberLabel,
-                  prefixIcon: Icon(Icons.phone),
                   suffix: _verifying
                       ? SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                          ),
-                        )
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                    ),
+                  )
                       : null),
-            ),
+            ))
           ],
         ));
   }
@@ -230,7 +253,16 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
       String message;
 
       if (e is FirebaseException) {
-        message = e.message;
+        switch (e.code) {
+          case 'invalid-phone-number':
+            message = "Please check the format of the provided phone number";
+            break;
+          case 'phone-number-already-exists':
+            message = "This phone number is already in use";
+            break;
+          default:
+            message = e.message;
+        }
       } else {
         message = e.toString();
       }
@@ -292,6 +324,10 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
     return SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(widget.options.borderRadius),
+            color: widget.options.backgroundColor,
+          ),
           width: 500,
           child: Padding(
               padding: EdgeInsets.all(24.0),

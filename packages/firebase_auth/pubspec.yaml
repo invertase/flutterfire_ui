@@ -8,8 +8,11 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  country_code_picker: ^1.4.0
   flutter:
     sdk: flutter
 
 dev_dependencies:
   firebase_auth: any
+
+
