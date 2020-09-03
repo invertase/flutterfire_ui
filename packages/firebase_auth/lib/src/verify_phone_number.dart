@@ -38,9 +38,9 @@ class VerifyPhoneNumberOptions {
       this.backgroundColor = Colors.white,
       this.titleColor = Colors.black,
       this.textColor = Colors.grey,
-        this.errorColor = Colors.red,
+      this.errorColor = Colors.red,
       this.buttonColor = Colors.black,
-        this.inputHighlightColor = Colors.blueAccent,
+      this.inputHighlightColor = Colors.blueAccent,
       this.borderRadius = 3,
       this.favoriteCountries = const ['US'],
       this.defaultCountry = 'US'
@@ -390,8 +390,8 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
                   title,
                   description,
                   if (!_enterSmsCode) input,
-                  if (_enterSmsCode) _SMSCodeInput(onCodeEntered),
-                  if (_error != null) _Error(_error),
+                  if (_enterSmsCode) _SMSCodeInput(onCodeEntered, widget.options),
+                  if (_error != null) _Error(_error, widget.options),
                   footer,
                 ],
               )),
@@ -400,7 +400,9 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
 }
 
 class _Error extends StatelessWidget {
-  const _Error(this.text);
+  _Error(this.text, this.options);
+
+  final VerifyPhoneNumberOptions options;
 
   final String text;
 
@@ -408,13 +410,15 @@ class _Error extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(top: 12),
-      child: Text(text, style: TextStyle(color: Colors.red)),
+      child: Text(text, style: TextStyle(color: options.errorColor)),
     );
   }
 }
 
 class _SMSCodeInput extends StatelessWidget {
-  _SMSCodeInput(this.onEntered);
+  _SMSCodeInput(this.onEntered, this.options);
+
+  final VerifyPhoneNumberOptions options;
 
   final void Function(String code) onEntered;
 
@@ -452,17 +456,22 @@ class _SMSCodeInput extends StatelessWidget {
           textAlign: TextAlign.center,
           maxLength: 1,
           textInputAction: TextInputAction.next,
+          cursorColor: options.inputHighlightColor,
           style: TextStyle(
+            color: options.inputHighlightColor,
             fontSize: 18,
             height: 2,
           ),
           decoration: InputDecoration(
             counterText: '',
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: options.inputHighlightColor),
+            ),
             contentPadding: EdgeInsets.only(
               bottom: 30,
             ),
-            border:
-                OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+            enabledBorder:
+                OutlineInputBorder(borderSide: BorderSide(color: options.textColor)),
           ),
         ),
       ),

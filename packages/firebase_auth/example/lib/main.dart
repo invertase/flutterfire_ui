@@ -78,9 +78,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 backgroundColor: Colors.indigo,
                 titleColor: Colors.white,
                 textColor: Colors.white,
-              errorColor: Colors.green,
-              inputHighlightColor: Colors.orangeAccent,
-              buttonColor: Colors.white54
+                errorColor: Colors.green,
+                inputHighlightColor: Colors.orangeAccent,
+                buttonColor: Colors.white54
             )).then(print),
             child: Text("Verify Phone Number..."),
           ),
