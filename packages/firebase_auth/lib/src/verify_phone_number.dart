@@ -116,6 +116,7 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
   String _error;
   String _phoneNumber;
   String _verificationId;
+  int _resendToken;
   bool _verifying = false;
   bool _enterSmsCode = false;
   TextEditingController codeInputController = TextEditingController();
@@ -128,6 +129,7 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
 
   void setEnterSmsCode(bool value) {
     setState(() {
+      _error = null;
       _enterSmsCode = value;
     });
   }
@@ -200,6 +202,17 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
                 ),
               ),
             ),
+          if (_enterSmsCode)
+            FlatButton(
+              onPressed: () => triggerVerification(),
+              padding: EdgeInsets.all(16),
+              child: Text(
+                widget.options.send,
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -207,15 +220,26 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
 
   void performAuthAction(PhoneAuthCredential phoneAuthCredential) async {
     UserCredential userCredential;
+    Future<UserCredential> action;
 
     if (widget.options.type == VerifyPhoneNumberType.signIn) {
       assert(widget.auth.currentUser == null);
-      userCredential =
-          await widget.auth.signInWithCredential(phoneAuthCredential);
+      action = widget.auth.signInWithCredential(phoneAuthCredential);
     } else {
       assert(widget.auth.currentUser != null);
-      userCredential =
-          await widget.auth.currentUser.linkWithCredential(phoneAuthCredential);
+      action = widget.auth.currentUser.linkWithCredential(phoneAuthCredential);
+    }
+
+    try {
+      userCredential = await action;
+    } on FirebaseException catch (e) {
+      if (e.code == 'invalid-verification-code') {
+        // TODO show invalid error code
+      } else {
+        handleError(e);  
+      }
+    } catch (e) {
+      handleError(e);
     }
 
     Navigator.pop(context, userCredential);
@@ -253,6 +277,7 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
   }
 
   void codeSent(String verificationId, int resendToken) {
+    _resendToken = resendToken;
     _verificationId = verificationId;
     setEnterSmsCode(true);
   }
@@ -365,16 +390,14 @@ class _SMSCodeInput extends StatelessWidget {
           maxLength: 1,
           textInputAction: TextInputAction.next,
           style: TextStyle(
-            fontSize: 18,
-            height: 2,
+            fontSize: 22,
           ),
           decoration: InputDecoration(
             counterText: '',
             contentPadding: EdgeInsets.only(
-              bottom: 30,
+              bottom: 8,
             ),
-            border:
-                OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+            border: UnderlineInputBorder(),
           ),
         ),
       ),
