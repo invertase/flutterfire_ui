@@ -191,6 +191,7 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
 
   void setEnterSmsCode(bool value) {
     setState(() {
+      _error = null;
       _enterSmsCode = value;
     });
   }
@@ -304,6 +305,7 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
 
   void performAuthAction(PhoneAuthCredential phoneAuthCredential) async {
     UserCredential userCredential;
+    Future<UserCredential> action;
 
     try {
       if (widget.options.type == VerifyPhoneNumberType.signIn) {
@@ -319,6 +321,27 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
     } catch (e) {
       handleError(e);
     }
+    if (widget.options.type == VerifyPhoneNumberType.signIn) {
+      assert(widget.auth.currentUser == null);
+      action = widget.auth.signInWithCredential(phoneAuthCredential);
+    } else {
+      assert(widget.auth.currentUser != null);
+      action = widget.auth.currentUser.linkWithCredential(phoneAuthCredential);
+    }
+
+    try {
+      userCredential = await action;
+    } on FirebaseException catch (e) {
+      if (e.code == 'invalid-verification-code') {
+        // TODO show invalid error code
+      } else {
+        handleError(e);
+      }
+    } catch (e) {
+      handleError(e);
+    }
+
+    Navigator.pop(context, userCredential);
   }
 
   void handleError(Object e) {
@@ -485,8 +508,8 @@ class _SMSCodeInput extends StatelessWidget {
           textInputAction: TextInputAction.next,
           cursorColor: options.inputHighlightColor,
           style: TextStyle(
+            fontSize: 22,
             color: options.inputHighlightColor,
-            fontSize: 18,
             height: 2,
           ),
           decoration: InputDecoration(
@@ -495,8 +518,9 @@ class _SMSCodeInput extends StatelessWidget {
               borderSide: BorderSide(color: options.inputHighlightColor),
             ),
             contentPadding: EdgeInsets.only(
-              bottom: 30,
+              bottom: 8,
             ),
+            border: UnderlineInputBorder(),
             enabledBorder:
                 UnderlineInputBorder(borderSide: BorderSide(color: options.textColor)),
           ),
