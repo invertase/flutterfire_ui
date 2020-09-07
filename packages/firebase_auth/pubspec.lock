@@ -83,11 +83,53 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_twitter_login:
+    dependency: "direct main"
+    description:
+      name: flutter_twitter_login
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_webview_plugin:
+    dependency: transitive
+    description:
+      name: flutter_webview_plugin
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.11"
+  github_sign_in:
+    dependency: "direct main"
+    description:
+      name: github_sign_in
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.3"
+  google_sign_in:
+    dependency: "direct main"
+    description:
+      name: google_sign_in
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.5.3"
+  google_sign_in_platform_interface:
+    dependency: transitive
+    description:
+      name: google_sign_in_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.2"
+  google_sign_in_web:
+    dependency: transitive
+    description:
+      name: google_sign_in_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.1+1"
   http:
     dependency: transitive
     description:

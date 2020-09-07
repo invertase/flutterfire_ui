@@ -2,6 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth_ui/firebase_auth_ui.dart';
+import 'package:sign_button/sign_button.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -71,15 +73,41 @@ class _MyHomePageState extends State<MyHomePage> {
           title: Text(widget.title),
         ),
         body: Center(
-          child: RaisedButton(
-            onPressed: () => verifyPhoneNumber(context, VerifyPhoneNumberOptions(
-                favoriteCountries: ['GB', 'US'],
-                defaultCountry: 'GB',
-                title: "Create Account",
-                inputHighlightColor: Colors.black54
-            )).then(print),
-            child: Text("Verify Phone Number..."),
-          ),
-        ));
+            child: Column(
+                children: [
+                  RaisedButton(
+                    onPressed: () => verifyPhoneNumber(context, VerifyPhoneNumberOptions(
+                        favoriteCountries: ['GB', 'US'],
+                        defaultCountry: 'GB',
+                        title: "Create Account",
+                        inputHighlightColor: Colors.black54
+                    )).then(print),
+                    child: Text("Verify Phone Number..."),
+                  ),
+                  SignButton(
+                      buttonType: ButtonType.google,
+                      onPressed: ()  => {
+                        signInWithGoogle()
+                            .then(print)
+                            .catchError((e) => print(e))
+                      }).show(),
+                  SignButton(
+                      buttonType: ButtonType.twitter,
+                      onPressed: ()  => {
+                        signInWithTwitter(SignInProviderOptions(apiKey: "", apiSecret: ""))
+                            .then(print)
+                            .catchError((e) => print(e))
+                      }).show(),
+                  SignButton(
+                      buttonType: ButtonType.github,
+                      onPressed: ()  => {
+                        signInWithGitHub(context, GitHubSignInOptions(apiKey: "", apiSecret: ""))
+                            .then(print)
+                            .catchError((e) => print(e))
+                      }).show(),
+                ]
+            )
+        )
+    );
   }
 }

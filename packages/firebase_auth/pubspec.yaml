@@ -8,6 +8,9 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  google_sign_in: ^4.5.3
+  flutter_twitter_login: ^1.1.0
+  github_sign_in: ^0.0.1
   country_code_picker: ^1.4.0
   flutter:
     sdk: flutter
