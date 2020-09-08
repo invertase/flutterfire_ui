@@ -60,6 +60,9 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
+  GitHubConfig gitHubConfig = GitHubConfig(clientId: null, clientSecret: null);
+  TwitterConfig twitterConfig = TwitterConfig(apiKey: "uIwDYzdziDHOjNwA2IitM9wYI", apiSecret: "jmvrMCEorotAZ5Y4gevmrAEJgxz5UV3c7qLZosaQhxDafee58F");
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -86,6 +89,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     )).then(print),
                     child: Text("Verify Phone Number..."),
                   ),
+                  RaisedButton(
+                    onPressed: () => signInWithExistingProvider(context, gitHubConfig).then(print),
+                    child: Text("Fetch Providers"),
+                  ),
                   SignButton(
                       buttonType: ButtonType.google,
                       onPressed: ()  => {
@@ -96,14 +103,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   SignButton(
                       buttonType: ButtonType.twitter,
                       onPressed: ()  => {
-                        signInWithTwitter(SignInProviderOptions(apiKey: "", apiSecret: ""))
+                        signInWithTwitter(twitterConfig)
                             .then(print)
                             .catchError((e) => print(e))
                       }).show(),
                   SignButton(
                       buttonType: ButtonType.github,
                       onPressed: ()  => {
-                        signInWithGitHub(context, SignInProviderOptions(apiKey: "", apiSecret: ""))
+                        signInWithGitHub(context, gitHubConfig)
                             .then(print)
                             .catchError((e) => print(e))
                       }).show(),

@@ -1,45 +1,11 @@
 part of firebase_auth_ui;
 
-/// Options which can be passed to the sign in methods to control
-/// the sign-in flow.
-///
-/// ```dart
-/// signInWithGoogle( SignInProviderOptions(
-///   apiKey: 'key',
-///   apiSecret: 'secret'
-/// ));
-/// ```
-class SignInProviderOptions {
-  const SignInProviderOptions(
-      {
-        this.auth,
-        this.apiKey,
-        this.apiSecret,
-        this.redirectUrl,
-      });
-
-  /// The [FirebaseAuth] instance to authentication with.
-  ///
-  /// The default [FirebaseAuth] instance will be used if not provided.
-  final FirebaseAuth auth;
-
-  /// The API Key for the provider
-  final String apiKey;
-
-  /// The API Secret for the provider
-  final String apiSecret;
-
-  /// The Redirect URL for the instance
-  final String redirectUrl;
-}
-
-
 /// The entry point for signing in with Google.
 ///
 /// Resolves with the result of the flow. If the user successfully signs in with
 /// Google, the [UserCredential] will be returned.
 /// Otherwise, the error will be returned
-Future<UserCredential> signInWithGoogle([SignInProviderOptions options = const SignInProviderOptions()]) async {
+Future<UserCredential> signInWithGoogle([GoogleConfig options = const GoogleConfig()]) async {
   FirebaseAuth auth = options.auth ?? FirebaseAuth.instance;
 
   GoogleAuthCredential googleAuthCredential;
@@ -61,7 +27,7 @@ Future<UserCredential> signInWithGoogle([SignInProviderOptions options = const S
 /// Resolves with the result of the flow. If the user successfully signs in with
 /// Twitter, the [UserCredential] will be returned.
 /// Otherwise, the error will be returned
-Future<UserCredential> signInWithTwitter([SignInProviderOptions options = const SignInProviderOptions()]) async {
+Future<UserCredential> signInWithTwitter([TwitterConfig options = const TwitterConfig()]) async {
 
   FirebaseAuth auth = options.auth ?? FirebaseAuth.instance;
 
@@ -84,12 +50,12 @@ Future<UserCredential> signInWithTwitter([SignInProviderOptions options = const 
 /// Resolves with the result of the flow. If the user successfully signs in with
 /// GitHub, the [UserCredential] will be returned.
 /// Otherwise, the error will be returned
-Future<UserCredential> signInWithGitHub(context, [SignInProviderOptions options = const SignInProviderOptions()]) async {
+Future<UserCredential> signInWithGitHub(context, [GitHubConfig options = const GitHubConfig()]) async {
   FirebaseAuth auth = options.auth ?? FirebaseAuth.instance;
 
   final GitHubSignIn gitHubSignIn = GitHubSignIn(
-      clientId: options.apiKey,
-      clientSecret: options.apiSecret,
+      clientId: options.clientId,
+      clientSecret: options.clientSecret,
       redirectUrl: options.redirectUrl);
 
   final result = await gitHubSignIn.signIn(context);
