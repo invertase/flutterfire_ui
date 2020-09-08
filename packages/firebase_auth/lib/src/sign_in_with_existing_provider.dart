@@ -34,6 +34,8 @@ class _FetchProviders extends StatefulWidget {
     @required this.context,
     @required this.options,
     this.gitHubConfig,
+    this.twitterConfig,
+    this.facebookConfig,
     Key key
   }) : auth = options.auth ?? FirebaseAuth.instance, super(key: key);
 
@@ -41,6 +43,8 @@ class _FetchProviders extends StatefulWidget {
   final ExistingProviderOptions options;
   final FirebaseAuth auth;
   final GitHubConfig gitHubConfig;
+  final TwitterConfig twitterConfig;
+  final FacebookConfig facebookConfig;
 
   @override
   State<StatefulWidget> createState() {
@@ -95,15 +99,15 @@ class _FetchProvidersState extends State<_FetchProviders> {
 
   Widget get providerList {
     return Container(
-      padding: EdgeInsets.only(top: 10),
-      child: Center(
-        child: Column(
-          children: <Widget>[
-            for(var item in _providers)
-              ProviderButton(item: item)
-          ],
-        ),
-      )
+        padding: EdgeInsets.only(top: 10),
+        child: Center(
+          child: Column(
+            children: <Widget>[
+              for(var item in _providers)
+                ProviderButton(item: item)
+            ],
+          ),
+        )
     );
   }
 
@@ -238,8 +242,12 @@ class _ProviderButtonState extends State<ProviderButton> {
 }
 
 Future<UserCredential> signInWithExistingProvider(BuildContext context,
-    [GitHubConfig gitHubConfig = const GitHubConfig(),
-    ExistingProviderOptions options = const ExistingProviderOptions()]
+    [
+      GitHubConfig gitHubConfig = const GitHubConfig(),
+      TwitterConfig twitterConfig = const TwitterConfig(),
+      FacebookConfig facebookConfig = const FacebookConfig(),
+      ExistingProviderOptions options = const ExistingProviderOptions()
+    ]
     ){
 
   return showDialog<UserCredential>(
@@ -252,7 +260,9 @@ Future<UserCredential> signInWithExistingProvider(BuildContext context,
           child: _FetchProviders(
             context: context,
             options: options,
-            gitHubConfig: gitHubConfig
+            gitHubConfig: gitHubConfig,
+            twitterConfig: twitterConfig,
+            facebookConfig: facebookConfig,
           ),
         );
       }

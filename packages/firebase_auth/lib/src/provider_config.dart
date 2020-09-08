@@ -52,3 +52,14 @@ class GoogleConfig{
   /// The default [FirebaseAuth] instance will be used if not provided.
   final FirebaseAuth auth;
 }
+
+class FacebookConfig{
+  const FacebookConfig({
+    this.auth
+  });
+
+  /// The [FirebaseAuth] instance to authentication with.
+  ///
+  /// The default [FirebaseAuth] instance will be used if not provided.
+  final FirebaseAuth auth;
+}

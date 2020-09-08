@@ -114,6 +114,13 @@ class _MyHomePageState extends State<MyHomePage> {
                             .then(print)
                             .catchError((e) => print(e))
                       }).show(),
+                  SignButton(
+                      buttonType: ButtonType.facebook,
+                      onPressed: ()  => {
+                        signInWithFacebook()
+                            .then(print)
+                            .catchError((e) => print(e))
+                      }).show(),
                 ]
             )
         )

@@ -65,7 +65,21 @@ Future<UserCredential> signInWithGitHub(context, [GitHubConfig options = const G
   return auth.signInWithCredential(githubAuthCredential);
 }
 
+/// The entry point for signing in with Facebook.
+///
+/// Resolves with the result of the flow. If the user successfully signs in with
+/// Facebook, the [UserCredential] will be returned.
+/// Otherwise, the error will be returned
+Future<UserCredential> signInWithFacebook([FacebookConfig options = const FacebookConfig()]) async {
+  FirebaseAuth auth = options.auth ?? FirebaseAuth.instance;
 
+  final LoginResult result = await FacebookAuth.instance.login();
+
+  final FacebookAuthCredential facebookAuthCredential =
+  FacebookAuthProvider.credential(result.accessToken.token);
+
+  return auth.signInWithCredential(facebookAuthCredential);
+}
 
 
 
