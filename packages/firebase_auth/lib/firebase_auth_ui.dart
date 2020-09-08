@@ -13,3 +13,4 @@ import 'package:flutter/services.dart';
 
 part 'src/verify_phone_number.dart';
 part 'src/sign_in_with_provider.dart';
+part 'src/sign_in_with_existing_provider.dart';

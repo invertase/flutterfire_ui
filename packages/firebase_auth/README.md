@@ -11,8 +11,14 @@ A dialog popup which handles the user verifying their phone number and signing i
 - [ ] Overall UI improvements (Google Pay has a good SMS validation UI)
 - [ ] Support Web (possible since sign-in is carried out).
 
-## `signInWithProvider`
 
+## `signInWith[Provider]`
+
+A Future that handles the authentication flow for the provider
+
+- [x] Setup basic example
+
+## `signInWithExistingProvider`
 A UI flow which triggers a "provider first" UI flow:
 
 1. User enters their email address into an input box.

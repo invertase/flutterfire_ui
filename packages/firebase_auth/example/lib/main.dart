@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth_ui/firebase_auth_ui.dart';
+import 'package:flutter/services.dart';
 import 'package:sign_button/sign_button.dart';
 
 
@@ -101,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   SignButton(
                       buttonType: ButtonType.github,
                       onPressed: ()  => {
-                        signInWithGitHub(context, GitHubSignInOptions(apiKey: "", apiSecret: ""))
+                        signInWithGitHub(context, SignInProviderOptions(apiKey: "", apiSecret: ""))
                             .then(print)
                             .catchError((e) => print(e))
                       }).show(),
