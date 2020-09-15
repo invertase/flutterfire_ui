@@ -366,7 +366,6 @@ class _VerifyPhoneNumberState extends State<_VerifyPhoneNumber> {
       } else {
         message = e.toString();
       }
-      print(message);
       setState(() {
         _error = message;
       });

@@ -90,37 +90,39 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Text("Verify Phone Number..."),
                   ),
                   RaisedButton(
-                    onPressed: () => signInWithExistingProvider(context, gitHubConfig).then(print),
+                    onPressed: () => signInWithExistingProvider(
+                        context,
+                        twitterConfig: twitterConfig)
+                        .then(print),
                     child: Text("Fetch Providers"),
                   ),
-                  SignButton(
+                  SignInButton(
                       buttonType: ButtonType.google,
                       onPressed: ()  => {
                         signInWithGoogle()
                             .then(print)
                             .catchError((e) => print(e))
-                      }).show(),
-                  SignButton(
+                      }),
+                  SignInButton(
                       buttonType: ButtonType.twitter,
                       onPressed: ()  => {
                         signInWithTwitter(twitterConfig)
-                            .then(print)
-                            .catchError((e) => print(e))
-                      }).show(),
-                  SignButton(
+                            .then((p) => print("Success: $p")).catchError((e) => print(e))
+                      }),
+                  SignInButton(
                       buttonType: ButtonType.github,
                       onPressed: ()  => {
                         signInWithGitHub(context, gitHubConfig)
                             .then(print)
                             .catchError((e) => print(e))
-                      }).show(),
-                  SignButton(
+                      }),
+                  SignInButton(
                       buttonType: ButtonType.facebook,
                       onPressed: ()  => {
                         signInWithFacebook()
                             .then(print)
                             .catchError((e) => print(e))
-                      }).show(),
+                      }),
                 ]
             )
         )

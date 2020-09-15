@@ -104,7 +104,11 @@ class _FetchProvidersState extends State<_FetchProviders> {
           child: Column(
             children: <Widget>[
               for(var item in _providers)
-                ProviderButton(item: item)
+                ProviderButton(
+                  item: item,
+                  gitHubConfig: widget.gitHubConfig,
+                  twitterConfig: widget.twitterConfig,
+                  facebookConfig: widget.facebookConfig)
             ],
           ),
         )
@@ -187,10 +191,16 @@ class _FetchProvidersState extends State<_FetchProviders> {
 class ProviderButton extends StatefulWidget {
   ProviderButton({
     Key key,
-    this.item
+    this.item,
+    this.gitHubConfig,
+    this.twitterConfig,
+    this.facebookConfig,
   }) : super(key:key);
 
   final String item;
+  final GitHubConfig gitHubConfig;
+  final TwitterConfig twitterConfig;
+  final FacebookConfig facebookConfig;
 
   @override
   _ProviderButtonState createState() => _ProviderButtonState();
@@ -198,6 +208,8 @@ class ProviderButton extends StatefulWidget {
 
 class _ProviderButtonState extends State<ProviderButton> {
   String _providerName;
+  Color _buttonColor = Colors.white;
+  Color _textColor = Colors.black;
 
   void initState() {
     switch(widget.item) {
@@ -206,25 +218,55 @@ class _ProviderButtonState extends State<ProviderButton> {
       case 'phone':
         break;
       case 'facebook.com':
-        setState(() =>  _providerName = "Facebook");
+        setState(() => {
+          _providerName = "Facebook",
+          _buttonColor = Colors.blueAccent,
+          _textColor = Colors.white
+        });
         break;
       case 'twitter.com':
-        setState(() =>  _providerName = "Twitter");
+        setState(() =>  {
+          _providerName = "Twitter",
+          _buttonColor = Colors.lightBlue,
+          _textColor = Colors.white
+        });
         break;
       case 'github.com':
-        setState(() =>  _providerName = "GitHub");
+        setState(() =>  {
+          _providerName = "GitHub",
+          _buttonColor = Colors.black54,
+          _textColor = Colors.white
+        });
         break;
       case 'apple.com':
-        setState(() =>  _providerName = "Apple");
+        setState(() =>
+        {
+          _providerName = "Apple",
+          _buttonColor = Colors.white70,
+          _textColor = Colors.black
+        });
         break;
       case 'yahoo.com':
-        setState(() =>  _providerName = "Yahoo");
+        setState(() =>  {
+          _providerName = "Yahoo",
+          _buttonColor = Colors.deepPurple,
+          _textColor = Colors.white
+        } );
         break;
       case 'hotmail.com':
-        setState(() =>  _providerName = "Hotmail");
+        setState(() =>  {
+          _providerName= "Hotmail",
+          _buttonColor = Colors.indigoAccent,
+          _textColor = Colors.white
+        });
         break;
       case 'google.com':
-        setState(() =>  _providerName = "Google");
+        setState(() =>
+        {
+          _providerName = "Google",
+          _buttonColor = Colors.white,
+          _textColor = Colors.black
+        });
         break;
       default:
         break;
@@ -234,20 +276,31 @@ class _ProviderButtonState extends State<ProviderButton> {
 
   @override
   Widget build(BuildContext context) {
-    return RaisedButton(
-      child: Text(_providerName),
-      onPressed: () {},
+    return MaterialButton(
+        color: _buttonColor,
+        elevation: 1,
+        onPressed: () async {
+          await signInWithTwitter(widget.twitterConfig);
+          // switch (widget.item) {
+          //   case 'twitter.com':
+          //     await signInWithTwitter(widget.twitterConfig);
+          // }
+        },
+        child: Align(
+            alignment: Alignment.center,
+            child: Text(_providerName, style: TextStyle(color: _textColor))
+        )
     );
   }
 }
 
 Future<UserCredential> signInWithExistingProvider(BuildContext context,
-    [
+    {
       GitHubConfig gitHubConfig = const GitHubConfig(),
       TwitterConfig twitterConfig = const TwitterConfig(),
       FacebookConfig facebookConfig = const FacebookConfig(),
       ExistingProviderOptions options = const ExistingProviderOptions()
-    ]
+    }
     ){
 
   return showDialog<UserCredential>(

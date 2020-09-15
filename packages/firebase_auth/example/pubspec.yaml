@@ -10,12 +10,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^0.1.3
-  sign_button: ^0.0.7
+  cupertino_icons: ^1.0.0
+  sign_button: ^0.0.8
   firebase_core: any
   firebase_auth: any
   firebase_auth_ui:
     path: ../
+
 
 dev_dependencies:
   flutter_test:

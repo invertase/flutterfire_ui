@@ -1,5 +1,6 @@
 part of firebase_auth_ui;
 
+
 /// The entry point for signing in with Google.
 ///
 /// Resolves with the result of the flow. If the user successfully signs in with
