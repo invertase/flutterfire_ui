@@ -100,14 +100,15 @@ class _MyHomePageState extends State<MyHomePage> {
                       buttonType: ButtonType.google,
                       onPressed: ()  => {
                         signInWithGoogle()
-                            .then(print)
+                            .then((p) => print("SUCCESS: $p"))
                             .catchError((e) => print(e))
                       }),
                   SignInButton(
                       buttonType: ButtonType.twitter,
                       onPressed: ()  => {
                         signInWithTwitter(twitterConfig)
-                            .then((p) => print("Success: $p")).catchError((e) => print(e))
+                            .then((p) => print("Success: $p"))
+                            .catchError((e) => print(e))
                       }),
                   SignInButton(
                       buttonType: ButtonType.github,
@@ -116,13 +117,13 @@ class _MyHomePageState extends State<MyHomePage> {
                             .then(print)
                             .catchError((e) => print(e))
                       }),
-                  SignInButton(
-                      buttonType: ButtonType.facebook,
-                      onPressed: ()  => {
-                        // signInWithFacebook()
-                        //     .then(print)
-                        //     .catchError((e) => print(e))
-                      }),
+                  // SignInButton(
+                  //     buttonType: ButtonType.facebook,
+                  //     onPressed: ()  => {
+                  //       signInWithFacebook()
+                  //           .then(print)
+                  //           .catchError((e) => print(e))
+                  //     }),
                 ]
             )
         )

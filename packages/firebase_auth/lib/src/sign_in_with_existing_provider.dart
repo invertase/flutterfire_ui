@@ -54,6 +54,7 @@ class _FetchProviders extends StatefulWidget {
 
 class _FetchProvidersState extends State<_FetchProviders> {
   String _email;
+  String _errorMessage = "";
   bool _fetching = false;
   bool _selectProvider = false;
   List<String> _providers = [];
@@ -115,9 +116,16 @@ class _FetchProvidersState extends State<_FetchProviders> {
     );
   }
 
-  Widget get footer {
+  Widget get error {
     return Container(
       margin: EdgeInsets.only(top: 24),
+      child: Text(_errorMessage)
+    );
+  }
+
+  Widget get footer {
+    return Container(
+
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -156,12 +164,19 @@ class _FetchProvidersState extends State<_FetchProviders> {
       final List<String> providers = await widget.auth.fetchSignInMethodsForEmail(_email);
       setProviders(providers);
       setSelectProvider(true);
-    } catch (e) {
-      print(e);
+    }  on FirebaseException catch (e) {
+      setState(() {
+        _errorMessage = e.toString();
+      });
+    }
+
+   catch (e) {
+      print("ERROR: $e");
     } finally {
       setFetching(false);
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -177,6 +192,7 @@ class _FetchProvidersState extends State<_FetchProviders> {
                 children: [
                   title,
                   description,
+                  if(_errorMessage.isNotEmpty) error,
                   if(!_selectProvider) emailInput,
                   if(_selectProvider) providerList,
                   footer
@@ -280,11 +296,19 @@ class _ProviderButtonState extends State<ProviderButton> {
         color: _buttonColor,
         elevation: 1,
         onPressed: () async {
-          await signInWithTwitter(widget.twitterConfig);
-          // switch (widget.item) {
-          //   case 'twitter.com':
-          //     await signInWithTwitter(widget.twitterConfig);
-          // }
+          switch (widget.item) {
+            case 'twitter.com':
+              final result = await signInWithTwitter(widget.twitterConfig);
+              Navigator.pop(context, result);
+              break;
+            case 'github.com':
+              final result = await signInWithGitHub(widget.gitHubConfig);
+              Navigator.pop(context, result);
+              break;
+            default:
+              final result = await signInWithGoogle();
+              Navigator.pop(context, result);
+          }
         },
         child: Align(
             alignment: Alignment.center,

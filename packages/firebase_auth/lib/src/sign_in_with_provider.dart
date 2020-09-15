@@ -74,12 +74,25 @@ Future<UserCredential> signInWithGitHub(context, [GitHubConfig options = const G
 // Future<UserCredential> signInWithFacebook([FacebookConfig options = const FacebookConfig()]) async {
 //   FirebaseAuth auth = options.auth ?? FirebaseAuth.instance;
 //
-//   final LoginResult result = await FacebookAuth.instance.login();
+//   FacebookLogin facebookSignIn = new FacebookLogin();
 //
-//   final FacebookAuthCredential facebookAuthCredential =
-//   FacebookAuthProvider.credential(result.accessToken.token);
+//   final FacebookLoginResult result = await facebookSignIn.logIn(['email']);
 //
-//   return auth.signInWithCredential(facebookAuthCredential);
+//   switch (result.status) {
+//     case FacebookLoginStatus.loggedIn:
+//       final FacebookAuthCredential facebookAuthCredential =
+//       FacebookAuthProvider.credential(result.accessToken.token);
+//       return auth.signInWithCredential(facebookAuthCredential);
+//       break;
+//     case FacebookLoginStatus.cancelledByUser:
+//       throw('Login cancelled by the user.');
+//       break;
+//     case FacebookLoginStatus.error:
+//       throw('Something went wrong with the login process.\n'
+//           'Here\'s the error Facebook gave us: ${result.errorMessage}');
+//       break;
+//   }
+//   return throw("Something went wrong");
 // }
 
 
